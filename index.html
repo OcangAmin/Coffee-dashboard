@@ -2,251 +2,175 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Coffee Shop Manager Dashboard</title>
+<title>Coffee Shop Dashboard V2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-  --bg: #0f172a;
-  --card: #111827;
-  --soft: #1f2933;
-  --text: #e5e7eb;
-  --accent: #22c55e;
-  --danger: #ef4444;
-  --warn: #f59e0b;
+body{
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+  background:#0f172a;
+  color:#e5e7eb;
 }
-
-body {
-  margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+header{
+  padding:16px;
+  background:#22c55e;
+  color:#052e16;
+  font-weight:700;
 }
-
-header {
-  padding: 20px;
-  background: linear-gradient(135deg,#22c55e,#16a34a);
-  color: #052e16;
+section{
+  padding:14px;
 }
-
-h1 { margin: 0; }
-small { opacity: .8; }
-
-.container {
-  padding: 20px;
-  display: grid;
-  gap: 20px;
+.card{
+  background:#111827;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
 }
-
-.card {
-  background: var(--card);
-  border-radius: 14px;
-  padding: 16px;
+h2{margin-top:0;font-size:16px}
+input,select,button{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:10px;
+  border:none;
+  background:#1f2933;
+  color:#e5e7eb;
 }
-
-.card h2 {
-  margin-top: 0;
-  font-size: 18px;
+button{
+  background:#22c55e;
+  color:#052e16;
+  font-weight:700;
 }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-  gap: 12px;
+table{
+  width:100%;
+  font-size:13px;
+  border-collapse:collapse;
 }
-
-input, select {
-  width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  border: none;
-  background: var(--soft);
-  color: var(--text);
+td,th{
+  padding:6px;
+  border-bottom:1px solid #374151;
 }
-
-button {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: var(--accent);
-  color: #052e16;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover { opacity: .9; }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 8px;
-  border-bottom: 1px solid #374151;
-  font-size: 13px;
-}
-
-.badge-good { color: var(--accent); }
-.badge-warn { color: var(--warn); }
-.badge-bad { color: var(--danger); }
+.bad{color:#ef4444}
+.good{color:#22c55e}
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>☕ Coffee Shop Control Center</h1>
-  <small>Recipe • HPP • Margin • Profit (Offline System)</small>
-</header>
+<header>☕ Coffee Dashboard V2</header>
 
-<div class="container">
+<section>
 
-<!-- DASHBOARD -->
-<div class="card grid">
-  <div>
-    <h2>Total Menu</h2>
-    <h1 id="totalMenu">0</h1>
-  </div>
-  <div>
-    <h2>Avg Margin</h2>
-    <h1 id="avgMargin">0%</h1>
-  </div>
-  <div>
-    <h2>Profit Estimasi / Cup</h2>
-    <h1 id="avgProfit">Rp0</h1>
-  </div>
-</div>
-
-<!-- ESPRESSO SETTING -->
+<!-- ESPRESSO -->
 <div class="card">
-  <h2>☕ Espresso Setting (Editable)</h2>
-  <div class="grid">
-    <div>
-      <label>Gram In / Shot</label>
-      <input id="espressoGram" type="number" value="18">
-    </div>
-    <div>
-      <label>ML Out / Shot</label>
-      <input id="espressoML" type="number" value="60">
-    </div>
-    <div>
-      <button onclick="saveEspresso()">Simpan Setting</button>
-    </div>
-  </div>
+<h2>Espresso Setting</h2>
+<input id="espressoGram" type="number" placeholder="Gram / shot" value="18">
+<input id="espressoML" type="number" placeholder="ML / shot" value="60">
+<button onclick="saveEspresso()">Simpan</button>
 </div>
 
 <!-- BAHAN -->
 <div class="card">
-  <h2>🧱 Bahan Baku</h2>
-  <div class="grid">
-    <input id="bName" placeholder="Nama Bahan">
-    <input id="bPrice" placeholder="Harga Total" type="number">
-    <input id="bQty" placeholder="Isi Kemasan" type="number">
-    <select id="bUnit">
-      <option value="ml">ml</option>
-      <option value="gr">gr</option>
-      <option value="pcs">pcs</option>
-    </select>
-    <button onclick="addIngredient()">Tambah Bahan</button>
-  </div>
-  <table>
-    <thead><tr><th>Nama</th><th>Harga/Satuan</th></tr></thead>
-    <tbody id="ingredientTable"></tbody>
-  </table>
+<h2>Bahan Baku</h2>
+<input id="ingName" placeholder="Nama bahan">
+<input id="ingPrice" type="number" placeholder="Harga total">
+<input id="ingQty" type="number" placeholder="Isi kemasan">
+<button onclick="addIngredient()">Tambah</button>
+<table><tbody id="ingTable"></tbody></table>
+</div>
+
+<!-- RESEP -->
+<div class="card">
+<h2>Resep</h2>
+<input id="recipeName" placeholder="Nama resep">
+<select id="recipeIngredient"></select>
+<input id="recipeQty" type="number" placeholder="Qty pakai">
+<button onclick="addRecipeItem()">Tambah bahan ke resep</button>
+<table><tbody id="recipeTable"></tbody></table>
 </div>
 
 <!-- MENU -->
 <div class="card">
-  <h2>📋 Menu</h2>
-  <div class="grid">
-    <input id="mName" placeholder="Nama Menu">
-    <input id="mCost" placeholder="HPP" type="number">
-    <input id="mPrice" placeholder="Harga Jual" type="number">
-    <button onclick="addMenu()">Tambah Menu</button>
-  </div>
-  <table>
-    <thead>
-      <tr>
-        <th>Menu</th>
-        <th>HPP</th>
-        <th>Harga</th>
-        <th>Margin</th>
-        <th>Profit</th>
-      </tr>
-    </thead>
-    <tbody id="menuTable"></tbody>
-  </table>
+<h2>Menu</h2>
+<input id="menuName" placeholder="Nama menu">
+<input id="menuPrice" type="number" placeholder="Harga jual">
+<button onclick="addMenu()">Tambah menu</button>
+<table>
+<thead>
+<tr><th>Menu</th><th>HPP</th><th>Margin</th></tr>
+</thead>
+<tbody id="menuTable"></tbody>
+</table>
 </div>
 
-</div>
+</section>
 
 <script>
-let ingredients = JSON.parse(localStorage.getItem("ingredients")) || [];
-let menus = JSON.parse(localStorage.getItem("menus")) || [];
+let ingredients = JSON.parse(localStorage.getItem("ing"))||[];
+let recipes = [];
+let menus = [];
 
 function saveEspresso(){
-  localStorage.setItem("espresso", JSON.stringify({
-    gram: espressoGram.value,
-    ml: espressoML.value
+  localStorage.setItem("espresso",JSON.stringify({
+    gram:espressoGram.value,
+    ml:espressoML.value
   }));
-  alert("Espresso setting disimpan");
+  alert("Espresso disimpan");
 }
 
 function addIngredient(){
-  const pricePerUnit = bPrice.value / bQty.value;
   ingredients.push({
-    name: bName.value,
-    unit: bUnit.value,
-    price: pricePerUnit
+    name:ingName.value,
+    price:ingPrice.value/ingQty.value
   });
-  localStorage.setItem("ingredients", JSON.stringify(ingredients));
+  localStorage.setItem("ing",JSON.stringify(ingredients));
   renderIngredients();
 }
 
-function addMenu(){
-  menus.push({
-    name: mName.value,
-    hpp: Number(mCost.value),
-    price: Number(mPrice.value)
+function renderIngredients(){
+  ingTable.innerHTML="";
+  recipeIngredient.innerHTML="";
+  ingredients.forEach(i=>{
+    ingTable.innerHTML+=`<tr><td>${i.name}</td><td>Rp${i.price.toFixed(0)}</td></tr>`;
+    recipeIngredient.innerHTML+=`<option>${i.name}</option>`;
   });
-  localStorage.setItem("menus", JSON.stringify(menus));
+}
+
+function addRecipeItem(){
+  const ing=ingredients.find(i=>i.name===recipeIngredient.value);
+  recipes.push({name:recipeName.value, cost:ing.price*recipeQty.value});
+  renderRecipes();
+}
+
+function renderRecipes(){
+  recipeTable.innerHTML="";
+  recipes.forEach(r=>{
+    recipeTable.innerHTML+=`<tr><td>${r.name}</td><td>Rp${r.cost.toFixed(0)}</td></tr>`;
+  });
+}
+
+function addMenu(){
+  const hpp=recipes.reduce((a,b)=>a+b.cost,0);
+  const price=menuPrice.value;
+  menus.push({name:menuName.value,hpp,price});
   renderMenus();
 }
 
-function renderIngredients(){
-  ingredientTable.innerHTML = "";
-  ingredients.forEach(i=>{
-    ingredientTable.innerHTML += `<tr>
-      <td>${i.name}</td>
-      <td>Rp${i.price.toFixed(0)}</td>
-    </tr>`;
-  });
-}
-
 function renderMenus(){
-  menuTable.innerHTML = "";
-  let totalMargin=0, totalProfit=0;
+  menuTable.innerHTML="";
   menus.forEach(m=>{
-    const profit = m.price - m.hpp;
-    const margin = profit / m.price * 100;
-    totalMargin += margin;
-    totalProfit += profit;
-    menuTable.innerHTML += `<tr>
+    const margin=((m.price-m.hpp)/m.price*100).toFixed(1);
+    menuTable.innerHTML+=`
+    <tr>
       <td>${m.name}</td>
-      <td>Rp${m.hpp}</td>
-      <td>Rp${m.price}</td>
-      <td class="${margin<60?'badge-bad':'badge-good'}">${margin.toFixed(1)}%</td>
-      <td>Rp${profit}</td>
+      <td>Rp${m.hpp.toFixed(0)}</td>
+      <td class="${margin<60?'bad':'good'}">${margin}%</td>
     </tr>`;
   });
-  totalMenu.innerText = menus.length;
-  avgMargin.innerText = menus.length? (totalMargin/menus.length).toFixed(1)+"%":"0%";
-  avgProfit.innerText = "Rp"+(menus.length?Math.round(totalProfit/menus.length):0);
 }
 
 renderIngredients();
-renderMenus();
 </script>
 
 </body>
