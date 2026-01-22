@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Kasir Nasi kuning51</title>
+<title>Kasir Android Offline</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -92,6 +92,22 @@ th,td {
     margin-top:5px;
 }
 
+.history {
+    max-height:320px;
+    overflow:auto;
+}
+
+.save-history {
+    background:#2c3e50;
+    color:#fff;
+    border:none;
+    padding:10px;
+    width:100%;
+    border-radius:8px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
 @media(max-width:768px){
     .app { grid-template-columns:1fr }
 }
@@ -100,7 +116,7 @@ th,td {
 
 <body>
 
-<h1>Kasir Offline Android</h1>
+<h1>Nasi Kuning 51</h1>
 
 <div class="app">
 
@@ -158,6 +174,28 @@ th,td {
 
 </div>
 
+<!-- HISTORI -->
+<div class="card history">
+<h3>Histori Pembayaran</h3>
+<table>
+<thead>
+<tr>
+<th>Tanggal</th>
+<th>Waktu</th>
+<th>Metode</th>
+<th>Total</th>
+<th>Bayar</th>
+<th>Kembali</th>
+</tr>
+</thead>
+<tbody id="histori"></tbody>
+</table>
+
+<button class="save-history" onclick="saveHistori()">
+💾 Save Histori Pembayaran
+</button>
+</div>
+
 <script>
 let total = 0;
 let metode = "CASH";
@@ -179,12 +217,8 @@ function tambah(nama, qty, harga){
 }
 
 function updateTotal(){
-    total.innerText = totalValue();
-    hitungKembalian();
-}
-
-function totalValue(){
     document.getElementById("total").innerText = total.toLocaleString();
+    hitungKembalian();
 }
 
 function setPayment(m){
@@ -204,29 +238,37 @@ function selesaikan(){
     let bayarVal = metode==="QRIS"?total:+bayar.value;
     if(metode==="CASH" && bayarVal<total) return alert("Uang kurang");
 
-    simpanCSV(bayarVal);
+    const now = new Date();
+    const tgl = now.toLocaleDateString("id-ID");
+    const jam = now.toLocaleTimeString("id-ID");
+    const kembali = bayarVal - total;
+
+    histori.insertRow().innerHTML = `
+        <td>${tgl}</td>
+        <td>${jam}</td>
+        <td>${metode}</td>
+        <td>${total.toLocaleString()}</td>
+        <td>${bayarVal.toLocaleString()}</td>
+        <td>${kembali.toLocaleString()}</td>
+    `;
+
     resetKasir();
 }
 
-function simpanCSV(bayarVal){
-    const now = new Date();
-    const tgl = now.toISOString().slice(0,10);
-    const jam = now.toLocaleTimeString("id-ID");
-    const file = `kasir-${tgl}.csv`;
+function saveHistori(){
+    if(histori.rows.length===0) return alert("Histori kosong");
 
-    let header="Tanggal,Waktu,Metode,Menu,Qty,Subtotal,Total,Bayar,Kembalian\n";
-    let content = localStorage.getItem(file)||header;
-
-    document.querySelectorAll("#cart tr").forEach(r=>{
-        const c=r.children;
-        content+=`${tgl},${jam},${metode},${c[0].innerText},${c[1].innerText},${c[2].innerText},${total},${bayarVal},${bayarVal-total}\n`;
+    let csv = "Tanggal,Waktu,Metode,Total,Bayar,Kembalian\n";
+    [...histori.rows].forEach(r=>{
+        csv += [...r.cells].map(c=>c.innerText).join(",") + "\n";
     });
 
-    localStorage.setItem(file,content);
-    const blob=new Blob([content],{type:"text/csv"});
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);
-    a.download=file;
+    const now = new Date();
+    const file = `histori-pembayaran-${now.toISOString().slice(0,10)}.csv`;
+    const blob = new Blob([csv],{type:"text/csv"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = file;
     a.click();
 }
 
@@ -236,7 +278,7 @@ function resetKasir(){
     bayar.value="";
     metode="CASH";
     cashInput.style.display="block";
-    totalValue();
+    updateTotal();
     kembalian.innerText="0";
 }
 </script>
