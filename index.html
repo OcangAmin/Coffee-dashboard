@@ -2,180 +2,213 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kasir Nasi Kuning 51</title>
 
 <style>
-body{font-family:Arial;background:#f5f5f5;margin:0}
-.container{max-width:420px;margin:auto;padding:10px}
-.header{background:#ffb703;padding:14px;border-radius:14px;text-align:center;font-size:20px;font-weight:bold}
-.menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
-.menu-btn{background:#fff;border:none;padding:10px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,.1);font-weight:600}
-.cart,.summary,.history,.rekap{background:#fff;border-radius:12px;padding:10px;margin-top:10px}
-.cart-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.cart-item button{background:#e63946;color:#fff;border:none;border-radius:6px;padding:4px 6px}
-input{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc}
-.pay-btn{width:100%;padding:10px;margin-top:6px;border:none;border-radius:10px;font-weight:bold}
-.cash{background:#2a9d8f;color:#fff}
-.qris{background:#0077b6;color:#fff}
-.save{background:#6a4c93;color:#fff}
-.file{background:#457b9d;color:#fff}
-.danger{background:#dc3545;color:#fff}
-.history-item{font-size:13px;border-bottom:1px solid #eee;padding:6px 0}
+body{
+  font-family: Arial, sans-serif;
+  background:#f4f4f4;
+  margin:0;
+  padding:10px;
+}
+h2,h3{margin:6px 0}
+.box{
+  background:#fff;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:10px;
+}
+button{
+  padding:8px;
+  border:none;
+  border-radius:6px;
+  margin:3px;
+  cursor:pointer;
+}
+.menu-btn{background:#ffc107}
+.hapus{background:#dc3545;color:#fff}
+.simpan{background:#28a745;color:#fff;width:100%;margin-top:10px}
+input,select{
+  width:100%;
+  padding:7px;
+  margin:4px 0;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+td,th{
+  border-bottom:1px solid #ddd;
+  padding:6px;
+  text-align:center;
+}
+.hidden{display:none}
+.summary{
+  background:#e9ecef;
+  padding:8px;
+  border-radius:6px;
+}
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<div class="header">🍛 KASIR NASI KUNING 51</div>
-
-<div class="menu-grid">
-<button class="menu-btn" onclick="addItem('Ikan',5000)">Ikan<br>Rp5.000</button>
-<button class="menu-btn" onclick="addItem('Bakwan',2000)">Bakwan<br>Rp2.000</button>
-<button class="menu-btn" onclick="addItem('Nasi',5000)">Nasi<br>Rp5.000</button>
-<button class="menu-btn" onclick="addItem('Telur',5000)">Telur<br>Rp5.000</button>
-<button class="menu-btn" onclick="addItem('Ayam',5000)">Ayam<br>Rp5.000</button>
-<button class="menu-btn" onclick="addItem('NK Ayam',15000)">NK Ayam<br>Rp15.000</button>
-<button class="menu-btn" onclick="addItem('NK Ikan',13000)">NK Ikan<br>Rp13.000</button>
-<button class="menu-btn" onclick="addItem('NK Telur',10000)">NK Telur<br>Rp10.000</button>
-<button class="menu-btn" onclick="addItem('NK Ayam Telur',23000)">NK Ayam Telur<br>Rp23.000</button>
-<button class="menu-btn" onclick="addItem('NK Ikan Telur',20000)">NK Ikan Telur<br>Rp20.000</button>
-<button class="menu-btn" onclick="addItem('Air Mineral',5000)">Air<br>Rp5.000</button>
+<!-- KAS AWAL -->
+<div class="box" id="kasAwalBox">
+  <h2>💰 Kas Awal</h2>
+  <input type="number" id="kasAwal" placeholder="Masukkan kas awal">
+  <button class="simpan" onclick="simpanKasAwal()">Mulai Kasir</button>
 </div>
 
-<div class="cart" id="cart"></div>
+<!-- KASIR -->
+<div id="kasirBox" class="hidden">
 
-<div class="summary">
-<div><b>Total:</b> Rp <span id="total">0</span></div>
-<input type="number" id="bayar" placeholder="Nominal Bayar">
-<div><b>Kembalian:</b> Rp <span id="kembali">0</span></div>
-<div><b>Metode:</b> <span id="metode">-</span></div>
+<h2>🍛 Kasir Nasi Kuning 51</h2>
 
-<button class="pay-btn cash" onclick="setMetode('Cash')">💵 Cash</button>
-<button class="pay-btn qris" onclick="setMetode('QRIS')">📱 QRIS</button>
-
-<button class="pay-btn save" onclick="simpanKeHistori()">🧾 Simpan ke Histori</button>
-<button class="pay-btn file" onclick="simpanKeFile()">📄 Simpan ke File</button>
-<button class="pay-btn danger" onclick="hapusSemuaData()">🗑️ Hapus Semua Data</button>
+<div class="box">
+<h3>Menu</h3>
+<div id="menu"></div>
 </div>
 
-<div class="rekap">
-<b>📊 Rekap Omzet Hari Ini</b>
-<div>Total Transaksi: <span id="rekapJumlah">0</span></div>
-<div>Total Omzet: Rp <span id="rekapOmzet">0</span></div>
-<div>Total Kembalian: Rp <span id="rekapKembali">0</span></div>
+<div class="box">
+<h3>Transaksi</h3>
+<table id="tabel">
+<tr><th>Menu</th><th>Qty</th><th>Subtotal</th><th></th></tr>
+</table>
+<h3>Total: Rp <span id="total">0</span></h3>
+
+<select id="metode" onchange="ubahMetode()">
+<option value="">Metode Pembayaran</option>
+<option value="Cash">Cash</option>
+<option value="QRIS">QRIS</option>
+</select>
+
+<input type="number" id="bayar" placeholder="Uang dibayar" oninput="hitungKembali()">
+<h3>Kembalian: Rp <span id="kembali">0</span></h3>
 </div>
 
-<div class="history">
-<b>Histori Transaksi</b>
+<div class="box">
+<h3>📜 Histori Penjualan (Sementara)</h3>
 <div id="histori"></div>
+<button class="simpan" onclick="simpanHistori()">💾 Simpan Histori ke File</button>
+</div>
+
+<div class="box summary">
+<b>📊 Rekap Hari Ini</b><br>
+Transaksi: <span id="rJml">0</span><br>
+Omzet: Rp <span id="rOmzet">0</span><br>
+Kembalian: Rp <span id="rKembali">0</span>
 </div>
 
 </div>
 
 <script>
-let cart=[],total=0,metode="",transaksiTerakhir=null;
-const cartEl=document.getElementById("cart");
-const totalEl=document.getElementById("total");
-const bayarEl=document.getElementById("bayar");
-const kembaliEl=document.getElementById("kembali");
-const metodeEl=document.getElementById("metode");
-const historiEl=document.getElementById("histori");
+const menuData=[
+["Ikan",5000],["Bakwan",2000],["Nasi",5000],["Telur",5000],
+["Ayam",5000],["Nasi kuning ayam",15000],["Nasi kuning ikan",13000],
+["Nasi kuning telur",10000],["Nasi kuning ayam telur",23000],
+["Nasi kuning ikan telur",20000],["Air mineral",5000]
+];
 
-function addItem(n,h){cart.push({n,h});total+=h;renderCart();}
-function renderCart(){
-cartEl.innerHTML="";
-cart.forEach((i,x)=>{
-cartEl.innerHTML+=`<div class="cart-item">${i.n} - Rp${i.h}<button onclick="hapusItem(${x})">✕</button></div>`;
+let cart=[];
+let histori=[];
+
+function simpanKasAwal(){
+  let kas=document.getElementById("kasAwal").value;
+  if(!kas) return alert("Isi kas awal!");
+  localStorage.setItem("kasAwal",kas);
+  document.getElementById("kasAwalBox").classList.add("hidden");
+  document.getElementById("kasirBox").classList.remove("hidden");
+}
+
+menuData.forEach(m=>{
+  let b=document.createElement("button");
+  b.className="menu-btn";
+  b.innerText=m[0]+" Rp"+m[1];
+  b.onclick=()=>tambah(m[0],m[1]);
+  menu.appendChild(b);
 });
-totalEl.innerText=total;
-}
-function hapusItem(i){total-=cart[i].h;cart.splice(i,1);renderCart();}
-bayarEl.oninput=()=>kembaliEl.innerText=Math.max(0,bayarEl.value-total);
-function setMetode(m){metode=m;metodeEl.innerText=m;}
 
-function simpanKeHistori(){
-if(!total||!bayarEl.value||!metode)return alert("Lengkapi transaksi");
-let kembali=bayarEl.value-total;
-if(kembali<0)return alert("Uang kurang");
-
-let data={
-waktu:new Date().toLocaleString("id-ID"),
-kasir:"Nasi Kuning 51",
-total:total,
-bayar:Number(bayarEl.value),
-kembali:kembali,
-metode:metode
-};
-
-let h=JSON.parse(localStorage.getItem("historiKasir"))||[];
-h.push(data);
-localStorage.setItem("historiKasir",JSON.stringify(h));
-
-transaksiTerakhir=data;
-reset();
-tampilkanHistori();
-hitungRekap();
-alert("Transaksi disimpan ke histori");
+function tambah(n,h){
+  let i=cart.find(c=>c.nama==n);
+  if(i)i.qty++;
+  else cart.push({nama:n,harga:h,qty:1});
+  render();
 }
 
-function simpanKeFile(){
-if(!transaksiTerakhir)return alert("Belum ada transaksi untuk disimpan ke file");
-let d=transaksiTerakhir;
-let isi=`Kasir: ${d.kasir}
-Tanggal: ${d.waktu}
-
-Total: Rp${d.total}
-Bayar: Rp${d.bayar}
-Kembalian: Rp${d.kembali}
-Metode: ${d.metode}`;
-let b=new Blob([isi],{type:"text/plain"});
-let a=document.createElement("a");
-a.href=URL.createObjectURL(b);
-a.download="transaksi_"+Date.now()+".txt";
-a.click();
+function hapus(n){
+  cart=cart.filter(c=>c.nama!=n);
+  render();
 }
 
-function reset(){
-cart=[];total=0;
-cartEl.innerHTML="";
-totalEl.innerText=0;
-bayarEl.value="";
-kembaliEl.innerText=0;
-metodeEl.innerText="-";
-metode="";
+function render(){
+  tabel.innerHTML="<tr><th>Menu</th><th>Qty</th><th>Subtotal</th><th></th></tr>";
+  let t=0;
+  cart.forEach(c=>{
+    let s=c.harga*c.qty;
+    t+=s;
+    tabel.innerHTML+=`<tr>
+      <td>${c.nama}</td>
+      <td>${c.qty}</td>
+      <td>${s}</td>
+      <td><button class="hapus" onclick="hapus('${c.nama}')">X</button></td>
+    </tr>`;
+  });
+  total.innerText=t;
+  hitungKembali();
 }
 
-function tampilkanHistori(){
-historiEl.innerHTML="";
-let h=JSON.parse(localStorage.getItem("historiKasir"))||[];
-h.forEach(i=>{
-historiEl.innerHTML+=`<div class="history-item">${i.waktu}<br>Rp${i.total} | ${i.metode} | Kembali Rp${i.kembali}</div>`;
-});
+function ubahMetode(){
+  if(metode.value=="QRIS"){
+    bayar.value=total.innerText;
+  }
+}
+
+function hitungKembali(){
+  let k=bayar.value-total.innerText;
+  kembali.innerText=k>0?k:0;
+}
+
+function simpanHistori(){
+  if(cart.length==0)return alert("Transaksi kosong");
+  let data={
+    waktu:new Date().toLocaleString("id-ID"),
+    total:+total.innerText,
+    kembali:+kembali.innerText
+  };
+  histori.push(data);
+  tampilHistori();
+  simpanFile();
+  cart=[];render();
+}
+
+function tampilHistori(){
+  historiBox=histori.map(h=>`<div>${h.waktu} | Rp${h.total}</div>`).join("");
+  histori.innerHTML=historiBox;
+  hitungRekap();
 }
 
 function hitungRekap(){
-let h=JSON.parse(localStorage.getItem("historiKasir"))||[];
-let hari=new Date().toLocaleDateString("id-ID");
-let j=0,o=0,k=0;
-h.forEach(i=>{
-if(i.waktu.split(",")[0]===hari){j++;o+=i.total;k+=i.kembali;}
-});
-rekapJumlah.innerText=j;
-rekapOmzet.innerText=o;
-rekapKembali.innerText=k;
+  let o=0,k=0;
+  histori.forEach(h=>{o+=h.total;k+=h.kembali});
+  rJml.innerText=histori.length;
+  rOmzet.innerText=o;
+  rKembali.innerText=k;
 }
 
-function hapusSemuaData(){
-if(confirm("Hapus semua data?")){
-localStorage.clear();
-reset();
-tampilkanHistori();
-hitungRekap();
-}}
-tampilkanHistori();
-hitungRekap();
+function simpanFile(){
+  let t=new Date().toLocaleDateString("id-ID").replace(/\//g,"-");
+  let isi=`Kas Awal: Rp${localStorage.getItem("kasAwal")}\n\n`;
+  histori.forEach(h=>{
+    isi+=`${h.waktu} | Total Rp${h.total} | Kembali Rp${h.kembali}\n`;
+  });
+  isi+=`\nOmzet: Rp${rOmzet.innerText}\nKembalian: Rp${rKembali.innerText}`;
+  let a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([isi],{type:"text/plain"}));
+  a.download="kasir_nasi_kuning_51_"+t+".txt";
+  a.click();
+}
 </script>
 
 </body>
