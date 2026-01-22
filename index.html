@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>POS Kasir Nasi Kuning 51</title>
 <style>
   :root{
-    --bg:#0b1220;
-    --card:#0f1a2b;
-    --text:#f4f7ff;
-    --muted:#a8b2c8;
-    --accent:#7c3aed;
-    --danger:#ff3b3b;
-    --success:#22c55e;
-    --border:rgba(255,255,255,0.12);
+    --bg:#0f172a;
+    --card:#111b2b;
+    --text:#e5e7eb;
+    --muted:#a3aabf;
+    --accent:#38bdf8;
+    --danger:#fb7185;
+    --success:#34d399;
+    --border:rgba(229,231,235,0.12);
   }
   *{box-sizing:border-box;}
   body{
@@ -25,7 +25,7 @@
   .container{
     max-width: 420px;
     margin: 0 auto;
-    padding: 10px;
+    padding: 10px 10px 90px; /* bottom padding supaya tidak tertutup footer */
   }
   .header{
     display:flex;
@@ -35,19 +35,21 @@
   }
   .tabs{
     display:flex;
-    gap:10px;
+    gap:8px;
   }
   .tab{
-    padding:10px 12px;
-    border-radius:10px;
+    padding:10px 10px;
+    border-radius:12px;
     background:var(--card);
     border:1px solid var(--border);
     cursor:pointer;
-    font-weight:600;
+    font-weight:700;
+    font-size:14px;
   }
   .tab.active{
     background:var(--accent);
-    border-color:rgba(124,58,237,0.8);
+    border-color:rgba(56,189,248,0.7);
+    color:#0b1220;
   }
   .section{
     margin-top:10px;
@@ -55,68 +57,79 @@
   .card{
     background:var(--card);
     border:1px solid var(--border);
-    border-radius:12px;
+    border-radius:14px;
     padding:10px;
   }
   .grid{
     display:grid;
     grid-template-columns: repeat(2, 1fr);
     gap:8px;
+    margin-top:10px;
   }
   .menu-btn{
-    background:rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.06);
     border:1px solid rgba(255,255,255,0.12);
-    border-radius:12px;
-    padding:10px;
+    border-radius:14px;
+    padding:12px;
     cursor:pointer;
     text-align:left;
-    font-weight:600;
+    font-weight:800;
     font-size:14px;
+    line-height:1.2;
   }
   .menu-btn span{
     display:block;
     margin-top:6px;
     font-size:12px;
     color:var(--muted);
-    font-weight:500;
+    font-weight:600;
   }
-  .menu-btn:hover{background:rgba(255,255,255,0.12);}
+  .menu-btn:hover{background:rgba(255,255,255,0.10);}
   .cart-item{
     display:flex;
     justify-content:space-between;
-    align-items:center;
-    margin-bottom:8px;
+    align-items:flex-start;
+    margin-bottom:10px;
+    padding-bottom:10px;
     border-bottom:1px solid rgba(255,255,255,0.12);
-    padding-bottom:8px;
   }
   .cart-left{
-    display:flex;
-    flex-direction:column;
+    width:70%;
   }
-  .cart-name{font-weight:700;}
+  .cart-name{
+    font-weight:900;
+    font-size:14px;
+  }
   .cart-qty{
     display:flex;
     gap:6px;
-    margin-top:4px;
+    margin-top:8px;
+    flex-wrap:wrap;
   }
   .qty-btn{
-    padding:4px 8px;
-    border-radius:8px;
+    padding:6px 10px;
+    border-radius:12px;
     border:1px solid var(--border);
-    background:rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.06);
     cursor:pointer;
+    font-weight:800;
+    font-size:13px;
   }
-  .qty-btn:hover{background:rgba(255,255,255,0.12);}
+  .qty-btn:hover{background:rgba(255,255,255,0.10);}
   .cart-right{
+    width:30%;
     text-align:right;
+    font-weight:900;
+    font-size:14px;
   }
   .total{
     display:flex;
     justify-content:space-between;
-    font-weight:800;
-    padding-top:8px;
+    font-weight:900;
+    padding-top:10px;
     border-top:1px solid rgba(255,255,255,0.12);
     margin-top:10px;
+    font-size:14px;
   }
   .payment-row{
     display:flex;
@@ -125,49 +138,55 @@
   }
   .pay-btn{
     flex:1;
-    padding:10px;
-    border-radius:12px;
+    padding:12px;
+    border-radius:14px;
     border:1px solid var(--border);
-    background:rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.06);
     cursor:pointer;
-    font-weight:700;
+    font-weight:900;
+    font-size:14px;
   }
   .pay-btn.active{
     background:var(--accent);
-    border-color:rgba(124,58,237,0.8);
+    border-color:rgba(56,189,248,0.7);
+    color:#0b1220;
   }
   .input-group{
     display:flex;
     gap:8px;
     margin-top:10px;
+    flex-wrap:wrap;
   }
   input[type="number"]{
     flex:1;
-    padding:10px;
-    border-radius:12px;
+    padding:12px;
+    border-radius:14px;
     border:1px solid var(--border);
     background:rgba(255,255,255,0.06);
     color:var(--text);
-    font-weight:700;
+    font-weight:900;
     font-size:16px;
   }
   .small-btn{
-    padding:10px;
-    border-radius:12px;
+    padding:12px;
+    border-radius:14px;
     border:1px solid var(--border);
-    background:rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.06);
     cursor:pointer;
-    font-weight:700;
+    font-weight:900;
+    font-size:13px;
   }
-  .small-btn:hover{background:rgba(255,255,255,0.12);}
+  .small-btn:hover{background:rgba(255,255,255,0.10);}
   .footer-fixed{
     position:fixed;
     bottom:0;
     left:0;
     right:0;
     padding:10px;
-    background:rgba(11,18,32,0.95);
+    background:rgba(15,23,42,0.95);
     border-top:1px solid rgba(255,255,255,0.12);
+    z-index:999;
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .footer-inner{
     max-width:420px;
@@ -177,16 +196,18 @@
   }
   .btn-wide{
     flex:1;
-    padding:12px;
-    border-radius:12px;
+    padding:14px;
+    border-radius:14px;
     border:1px solid var(--border);
     background:var(--accent);
-    color:#fff;
-    font-weight:800;
+    color:#0b1220;
+    font-weight:900;
     cursor:pointer;
+    font-size:14px;
   }
   .btn-danger{
     background:var(--danger);
+    color:#0b1220;
   }
   .history-list{
     max-height: 430px;
@@ -195,19 +216,21 @@
   }
   .hist-item{
     border:1px solid rgba(255,255,255,0.12);
-    border-radius:12px;
+    border-radius:14px;
     padding:10px;
     margin-bottom:10px;
   }
   .hist-top{
     display:flex;
     justify-content:space-between;
-    font-weight:800;
+    font-weight:900;
+    font-size:13px;
   }
   .hist-detail{
     margin-top:8px;
     font-size:13px;
     color:var(--muted);
+    line-height:1.4;
   }
   .muted{color:var(--muted);}
   .hide{display:none;}
@@ -228,7 +251,7 @@
   <div id="pageTransaksi">
     <div class="section card">
       <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="font-weight:800;">Menu</div>
+        <div style="font-weight:900;">Menu</div>
         <div style="font-size:12px;color:var(--muted);">Tap untuk tambah</div>
       </div>
 
@@ -242,7 +265,7 @@
     </div>
 
     <div class="section card" style="margin-top:10px;">
-      <div style="font-weight:800;">Pesanan</div>
+      <div style="font-weight:900;">Pesanan</div>
       <div id="cartList" style="margin-top:10px;"></div>
 
       <div class="total">
@@ -256,7 +279,7 @@
     </div>
 
     <div class="section card" style="margin-top:10px;">
-      <div style="font-weight:800;">Pembayaran</div>
+      <div style="font-weight:900;">Pembayaran</div>
 
       <div class="payment-row">
         <button class="pay-btn" id="btnCash" onclick="setPayment('cash')">Cash</button>
@@ -287,7 +310,7 @@
   <!-- HISTORY -->
   <div id="pageHistory" class="hide">
     <div class="section card">
-      <div style="font-weight:800;">History Penjualan</div>
+      <div style="font-weight:900;">History Penjualan</div>
       <div class="history-list" id="historyList"></div>
 
       <div style="display:flex;gap:8px;margin-top:10px;">
@@ -525,7 +548,6 @@
     history.push(record);
     saveToStorage();
 
-    // reset cart
     cart = [];
     calculateTotal();
     renderCart();
@@ -625,7 +647,6 @@
     a.click();
     URL.revokeObjectURL(a.href);
 
-    // reset history
     history = [];
     saveToStorage();
     renderHistory();
