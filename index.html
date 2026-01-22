@@ -12,22 +12,18 @@
     --gray:#777;
     --bg:#f2f2f2;
   }
-
   *{ box-sizing:border-box; }
-
   body{
     margin:0;
     font-family: Arial, sans-serif;
     background:var(--bg);
   }
-
   .container{
     max-width: 420px;
     margin:0 auto;
     padding:10px;
     padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
-
   .header{
     text-align:center;
     padding:12px 0;
@@ -44,6 +40,23 @@
     font-size:12px;
     color:#555;
   }
+
+  /* TAB */
+  .tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .tab{
+    flex:1;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    font-weight:700;
+  }
+  .tab.active{ background:var(--primary); color:#fff; }
+  .tab.inactive{ background:#fff; color:#000; border:1px solid #ddd; }
 
   .section{
     background:#fff;
@@ -150,7 +163,7 @@
   }
 
   .history{
-    max-height: 220px;
+    max-height: 350px;
     overflow:auto;
   }
   .history-item{
@@ -175,58 +188,73 @@
 <body>
 
 <div class="container">
+
   <div class="header">
     <div class="title">POS Kasir Nasi Kuning 51</div>
-    <div class="subtitle">Tampilan POS untuk HP (fit & cepat)</div>
+    <div class="subtitle">Tab Transaksi & History (fit HP)</div>
   </div>
 
-  <!-- MENU -->
-  <div class="section">
-    <h3>Menu Utama</h3>
-    <div class="btn-grid">
-      <button class="btn" onclick="addItem('Nasi kuning ayam',15000)">Nasi kuning ayam - 15.000</button>
-      <button class="btn" onclick="addItem('Nasi kuning ikan',13000)">Nasi kuning ikan - 13.000</button>
-      <button class="btn" onclick="addItem('Nasi kuning telur',10000)">Nasi kuning telur - 10.000</button>
-      <button class="btn" onclick="addItem('Nasi kuning ayam telur',23000)">Nasi kuning ayam telur - 23.000</button>
-      <button class="btn" onclick="addItem('Nasi kuning ikan telur',20000)">Nasi kuning ikan telur - 20.000</button>
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" id="tabTransaksi" onclick="showTab('transaksi')">Transaksi</button>
+    <button class="tab inactive" id="tabHistory" onclick="showTab('history')">History</button>
+  </div>
+
+  <!-- TAB TRANSAKSI -->
+  <div id="contentTransaksi">
+
+    <!-- MENU -->
+    <div class="section">
+      <h3>Menu Utama</h3>
+      <div class="btn-grid">
+        <button class="btn" onclick="addItem('Nasi kuning ayam',15000)">Nasi kuning ayam - 15.000</button>
+        <button class="btn" onclick="addItem('Nasi kuning ikan',13000)">Nasi kuning ikan - 13.000</button>
+        <button class="btn" onclick="addItem('Nasi kuning telur',10000)">Nasi kuning telur - 10.000</button>
+        <button class="btn" onclick="addItem('Nasi kuning ayam telur',23000)">Nasi kuning ayam telur - 23.000</button>
+        <button class="btn" onclick="addItem('Nasi kuning ikan telur',20000)">Nasi kuning ikan telur - 20.000</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Menu Additional</h3>
+      <div class="btn-grid">
+        <button class="btn secondary" onclick="addItem('Ikan',5000)">Ikan - 5.000</button>
+        <button class="btn secondary" onclick="addItem('Bakwan',2000)">Bakwan - 2.000</button>
+        <button class="btn secondary" onclick="addItem('Nasi',5000)">Nasi - 5.000</button>
+        <button class="btn secondary" onclick="addItem('Telur',5000)">Telur - 5.000</button>
+        <button class="btn secondary" onclick="addItem('Ayam',5000)">Ayam - 5.000</button>
+        <button class="btn secondary" onclick="addItem('Air mineral',5000)">Air mineral - 5.000</button>
+      </div>
+    </div>
+
+    <!-- CART -->
+    <div class="section">
+      <h3>Pesanan</h3>
+      <div class="cart" id="cart"></div>
+      <div class="summary">
+        <div>Total Item: <span id="totalItem">0</span></div>
+        <div>Total Harga: <span id="totalPrice">0</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB HISTORY -->
+  <div id="contentHistory" style="display:none;">
+    <div class="section">
+      <h3>History Penjualan</h3>
+      <div class="history" id="history"></div>
+      <div class="row" style="margin-top:8px;">
+        <button class="btn" onclick="saveHistory()">Simpan History</button>
+        <button class="btn danger" onclick="closeCashier()">Tutup Kasir</button>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <button class="btn gray" onclick="resetHistory()">Reset History</button>
+      </div>
+      <div class="info">Reset history akan menghapus semua riwayat penjualan.</div>
     </div>
   </div>
 
-  <div class="section">
-    <h3>Menu Additional</h3>
-    <div class="btn-grid">
-      <button class="btn secondary" onclick="addItem('Ikan',5000)">Ikan - 5.000</button>
-      <button class="btn secondary" onclick="addItem('Bakwan',2000)">Bakwan - 2.000</button>
-      <button class="btn secondary" onclick="addItem('Nasi',5000)">Nasi - 5.000</button>
-      <button class="btn secondary" onclick="addItem('Telur',5000)">Telur - 5.000</button>
-      <button class="btn secondary" onclick="addItem('Ayam',5000)">Ayam - 5.000</button>
-      <button class="btn secondary" onclick="addItem('Air mineral',5000)">Air mineral - 5.000</button>
-    </div>
-  </div>
-
-  <!-- CART -->
-  <div class="section">
-    <h3>Pesanan</h3>
-    <div class="cart" id="cart"></div>
-    <div class="summary">
-      <div>Total Item: <span id="totalItem">0</span></div>
-      <div>Total Harga: <span id="totalPrice">0</span></div>
-    </div>
-  </div>
-
-  <!-- HISTORY -->
-  <div class="section">
-    <h3>History Penjualan</h3>
-    <div class="history" id="history"></div>
-    <div class="row" style="margin-top:8px;">
-      <button class="btn" onclick="saveHistory()">Simpan History</button>
-      <button class="btn danger" onclick="closeCashier()">Tutup Kasir</button>
-    </div>
-    <div class="row" style="margin-top:8px;">
-      <button class="btn gray" onclick="resetHistory()">Reset History</button>
-    </div>
-    <div class="info">Reset history akan menghapus semua riwayat penjualan.</div>
-  </div>
 </div>
 
 <!-- FOOTER FIXED -->
@@ -265,6 +293,24 @@
   let cart = [];
   let history = [];
   let paymentMethod = null;
+
+  function showTab(tab){
+    if(tab === "transaksi"){
+      document.getElementById("contentTransaksi").style.display = "block";
+      document.getElementById("contentHistory").style.display = "none";
+      document.getElementById("tabTransaksi").classList.add("active");
+      document.getElementById("tabTransaksi").classList.remove("inactive");
+      document.getElementById("tabHistory").classList.add("inactive");
+      document.getElementById("tabHistory").classList.remove("active");
+    } else {
+      document.getElementById("contentTransaksi").style.display = "none";
+      document.getElementById("contentHistory").style.display = "block";
+      document.getElementById("tabTransaksi").classList.add("inactive");
+      document.getElementById("tabTransaksi").classList.remove("active");
+      document.getElementById("tabHistory").classList.add("active");
+      document.getElementById("tabHistory").classList.remove("inactive");
+    }
+  }
 
   function loadData(){
     cart = JSON.parse(localStorage.getItem("bucek_cart")) || [];
@@ -406,6 +452,7 @@
       return;
     }
 
+    // jika valid, transaksi disimpan ke history
     let now = new Date();
     let timestamp = now.toLocaleString();
 
@@ -425,6 +472,8 @@
     renderHistory();
     calc();
     saveData();
+
+    alert("Transaksi berhasil disimpan!");
   }
 
   function resetTransaction(){
