@@ -19,7 +19,7 @@ button{padding:10px;border:none;border-radius:8px;font-size:14px;cursor:pointer}
 .nominal-btn{background:#198754;color:#fff;font-weight:bold}
 .hapus{background:#dc3545;color:#fff}
 .simpan{background:#0d6efd;color:#fff;width:100%;margin-top:8px}
-.hidden{display:none}
+.owner{background:#343a40;color:#fff;width:100%;margin-top:8px}
 table{width:100%;border-collapse:collapse}
 td,th{border-bottom:1px solid #ddd;padding:6px;text-align:center}
 input{width:100%;padding:8px;margin-top:6px;font-size:16px}
@@ -28,16 +28,6 @@ input{width:100%;padding:8px;margin-top:6px;font-size:16px}
 </head>
 
 <body>
-
-<!-- KAS AWAL -->
-<div class="box" id="kasAwalBox">
-  <h2>💰 Kas Awal</h2>
-  <input type="number" id="kasAwal" placeholder="Masukkan kas awal">
-  <button class="simpan" onclick="simpanKasAwal()">Mulai Kasir</button>
-</div>
-
-<!-- KASIR -->
-<div id="kasirBox" class="hidden">
 
 <h2>🍛 Kasir Nasi Kuning 51</h2>
 
@@ -80,16 +70,15 @@ input{width:100%;padding:8px;margin-top:6px;font-size:16px}
 <h3>📜 Histori Pembayaran</h3>
 <div id="histori"></div>
 
-<button class="simpan" onclick="simpanKeFile()">💾 Simpan TOTAL Transaksi</button>
+<button class="simpan" onclick="simpanKeFile()">💾 Simpan Laporan Sementara</button>
+<button class="owner" onclick="tutupKasir()">🔒 Tutup Kasir</button>
 </div>
 
 <div class="box summary">
-<b>📊 Rekap Hari Ini</b><br>
+<b>📊 Rekap</b><br>
 Transaksi: <span id="rJml">0</span><br>
 Omzet: Rp <span id="rOmzet">0</span><br>
 Kembalian: Rp <span id="rKembali">0</span>
-</div>
-
 </div>
 
 <script>
@@ -100,15 +89,11 @@ const menuData=[
 ["Nasi kuning ikan telur",20000],["Air mineral",5000]
 ];
 
-let cart=[], histori=[], metode="";
+let cart=[];
+let histori=JSON.parse(localStorage.getItem("historiKasir")) || [];
+let metode="";
 
-function simpanKasAwal(){
-  if(!kasAwal.value) return alert("Isi kas awal!");
-  localStorage.setItem("kasAwal",kasAwal.value);
-  kasAwalBox.classList.add("hidden");
-  kasirBox.classList.remove("hidden");
-}
-
+/* INIT */
 menuData.forEach(m=>{
   let b=document.createElement("button");
   b.className="menu-btn";
@@ -116,7 +101,9 @@ menuData.forEach(m=>{
   b.onclick=()=>tambah(m[0],m[1]);
   menu.appendChild(b);
 });
+tampilHistori();
 
+/* CART */
 function tambah(n,h){
   let i=cart.find(c=>c.nama===n);
   i?i.qty++:cart.push({nama:n,harga:h,qty:1});
@@ -146,6 +133,7 @@ function render(){
   hitungKembalian();
 }
 
+/* PAYMENT */
 function pilihMetode(m){
   metode=m;
   btnCash.classList.remove("metode-aktif");
@@ -169,9 +157,9 @@ function hitungKembalian(){
   kembali.innerText=k>0?k:0;
 }
 
+/* TRANSACTION */
 function selesaikanTransaksi(){
-  if(cart.length===0) return alert("Transaksi kosong");
-  if(!metode) return alert("Pilih metode pembayaran");
+  if(cart.length===0 || !metode) return alert("Transaksi belum lengkap");
 
   histori.push({
     waktu:new Date().toLocaleString("id-ID"),
@@ -180,14 +168,15 @@ function selesaikanTransaksi(){
     metode:metode
   });
 
+  localStorage.setItem("historiKasir",JSON.stringify(histori));
+  cart=[];render();bayar.value="";kembali.innerText=0;
   tampilHistori();
-  cart=[];render();
-  bayar.value="";kembali.innerText=0;
 }
 
+/* HISTORI */
 function tampilHistori(){
-  histori.innerHTML=histori.map(h=>`
-    <div>${h.waktu} | ${h.metode} | Rp${h.total} | Kembali Rp${h.kembali}</div>
+  histori.innerHTML=histori.map((h,i)=>`
+    <div>${i+1}. ${h.waktu} | ${h.metode} | Rp${h.total} | Kembali Rp${h.kembali}</div>
   `).join("");
   hitungRekap();
 }
@@ -200,19 +189,35 @@ function hitungRekap(){
   rKembali.innerText=k;
 }
 
+/* FILE */
 function simpanKeFile(){
   let t=new Date().toLocaleDateString("id-ID").replace(/\//g,"-");
-  let isi=`Kas Awal: Rp${localStorage.getItem("kasAwal")}\n\n`;
-  histori.forEach(h=>{
-    isi+=`${h.waktu} | ${h.metode} | Total Rp${h.total} | Kembali Rp${h.kembali}\n`;
+  let isi=histori.map((h,i)=>`${i+1}. ${h.waktu} | ${h.metode} | Rp${h.total} | Kembali Rp${h.kembali}`).join("\n");
+  let a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([isi],{type:"text/plain"}));
+  a.download="laporan_sementara_"+t+".txt";
+  a.click();
+}
+
+/* TUTUP KASIR */
+function tutupKasir(){
+  if(!confirm("Tutup kasir dan buat laporan akhir?")) return;
+
+  let cash=histori.filter(h=>h.metode==="Cash").length;
+  let qris=histori.filter(h=>h.metode==="QRIS").length;
+  let avg=Math.round(Number(rOmzet.innerText)/Math.max(1,histori.length));
+
+  let t=new Date().toLocaleDateString("id-ID").replace(/\//g,"-");
+  let isi=`LAPORAN TUTUP KASIR - NASI KUNING 51\nTanggal: ${t}\n\nDETAIL TRANSAKSI\n`;
+  histori.forEach((h,i)=>{
+    isi+=`${i+1}. ${h.waktu} | ${h.metode} | Rp${h.total} | Kembali Rp${h.kembali}\n`;
   });
-  isi+=`\nTotal Transaksi: ${rJml.innerText}`;
-  isi+=`\nOmzet: Rp${rOmzet.innerText}`;
-  isi+=`\nKembalian: Rp${rKembali.innerText}`;
+  isi+=`\nRINGKASAN\nTransaksi: ${histori.length}\nOmzet: Rp${rOmzet.innerText}\nKembalian: Rp${rKembali.innerText}\n`;
+  isi+=`\nINSIGHT\nMetode dominan: ${cash>qris?"Cash":"QRIS"}\nRata-rata transaksi: Rp${avg}`;
 
   let a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([isi],{type:"text/plain"}));
-  a.download="kasir_nasi_kuning_51_"+t+".txt";
+  a.download="TUTUP_KASIR_"+t+".txt";
   a.click();
 }
 </script>
