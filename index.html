@@ -3,205 +3,224 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POS Nasi Kuning 51</title>
+<title>POS Nasi Kuning 51 - Tab UI</title>
 <style>
-  :root{
-    --bg:#F4F6F7;
-    --card:#FFFFFF;
-    --text:#1F2A3A;
-    --muted:#6B7785;
-    --border:#D6DDE5;
-    --primary:#1F7A8C;
-    --danger:#D9534F;
-    --success:#2ECC71;
-    --warning:#F39C12;
-  }
-  *{ box-sizing:border-box; }
-  body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:var(--bg);
-    color:var(--text);
-  }
-  .container{
-    padding:12px;
-    max-width: 420px;
-    margin:auto;
-  }
-  .header{
-    text-align:center;
-    padding:10px 0;
-  }
-  .card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:12px;
-    margin-bottom:12px;
-  }
-  .row{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-  }
-  .btn{
-    flex:1;
-    min-width:120px;
-    padding:10px;
-    border:none;
-    border-radius:10px;
-    background:var(--primary);
-    color:white;
-    font-weight:bold;
-    font-size:14px;
-    cursor:pointer;
-    text-align:center;
-    white-space:pre-line;
-  }
-  .btn:hover{ opacity:0.9; }
-  .btn-danger{ background:var(--danger); }
-  .btn-success{ background:var(--success); }
-  .btn-secondary{ background:#6B7785; }
-  .btn-warning{ background:var(--warning); }
-  .small{
-    font-size:12px;
-    color:var(--muted);
-  }
-  .input{
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    border:1px solid var(--border);
-    background:#FFFFFF;
-    color:var(--text);
-    margin-top:8px;
-    margin-bottom:8px;
-  }
-  .cart-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px;
-    border-bottom:1px solid var(--border);
-  }
-  .cart-item:last-child{ border-bottom:none; }
-  .cart-left{
-    display:flex;
-    flex-direction:column;
-  }
-  .cart-right{
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .badge{
-    padding:4px 8px;
-    border-radius:8px;
-    background:#EEF3F7;
-    border:1px solid var(--border);
-    font-size:12px;
-  }
-  .footer{
-    display:flex;
-    justify-content:space-between;
-    gap:8px;
-    flex-wrap:wrap;
-  }
-  .hide{ display:none; }
+:root{
+  --bg:#F4F6F7;
+  --card:#FFFFFF;
+  --text:#1F2A3A;
+  --muted:#6B7785;
+  --border:#D6DDE5;
+  --primary:#1F7A8C;
+  --danger:#D9534F;
+  --success:#2ECC71;
+  --warning:#F39C12;
+}
+*{ box-sizing:border-box; }
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:12px;
+}
+.header{
+  text-align:center;
+  padding:10px 0;
+}
+.tab{
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+}
+.tab button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:#E9EEF3;
+  color:var(--muted);
+  font-weight:bold;
+  cursor:pointer;
+}
+.tab button.active{
+  background:var(--primary);
+  color:white;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:12px;
+}
+.row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.btn{
+  flex:1;
+  min-width:120px;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:var(--primary);
+  color:white;
+  font-weight:bold;
+  font-size:14px;
+  cursor:pointer;
+  text-align:center;
+  white-space:pre-line;
+}
+.btn:hover{ opacity:0.9; }
+.btn-danger{ background:var(--danger); }
+.btn-success{ background:var(--success); }
+.btn-secondary{ background:#6B7785; }
+.btn-warning{ background:var(--warning); }
+.small{
+  font-size:12px;
+  color:var(--muted);
+}
+.input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#FFFFFF;
+  color:var(--text);
+  margin-top:8px;
+  margin-bottom:8px;
+}
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px;
+  border-bottom:1px solid var(--border);
+}
+.cart-item:last-child{ border-bottom:none; }
+.cart-left{
+  display:flex;
+  flex-direction:column;
+}
+.cart-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.badge{
+  padding:4px 8px;
+  border-radius:8px;
+  background:#EEF3F7;
+  border:1px solid var(--border);
+  font-size:12px;
+}
+.hide{ display:none; }
 
-  /* QRIS Popup */
-  .popup-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.25);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:999;
-  }
-  .popup{
-    width:90%;
-    max-width:360px;
-    background:var(--card);
-    border-radius:14px;
-    padding:16px;
-    border:1px solid var(--border);
-  }
-  .popup h3{
-    margin-top:0;
-    margin-bottom:8px;
-  }
+/* QRIS Popup */
+.popup-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.25);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+.popup{
+  width:90%;
+  max-width:360px;
+  background:var(--card);
+  border-radius:14px;
+  padding:16px;
+  border:1px solid var(--border);
+}
+.popup h3{
+  margin-top:0;
+  margin-bottom:8px;
+}
 </style>
 </head>
 <body>
 
 <div class="container">
-
   <div class="header">
     <h2>NASI KUNING 51 - POS</h2>
-    <div class="small">Tampilan HP & fit di layar</div>
+    <div class="small">Tab UI (Menu / Cart / Riwayat)</div>
   </div>
 
-  <!-- MENU UTAMA -->
-  <div class="card">
-    <div class="small">MENU UTAMA</div>
-    <div class="row" id="mainMenu"></div>
+  <!-- TAB -->
+  <div class="tab">
+    <button id="tabMenu" class="active" onclick="showTab('menu')">MENU</button>
+    <button id="tabCart" onclick="showTab('cart')">CART</button>
+    <button id="tabHistory" onclick="showTab('history')">RIWAYAT TRANSAKSI</button>
   </div>
 
-  <!-- TAMBAHAN -->
-  <div class="card">
-    <div class="small">TAMBAHAN</div>
-    <div class="row" id="additionalMenu"></div>
-  </div>
-
-  <!-- CART -->
-  <div class="card">
-    <div class="small">PESANAN</div>
-    <div id="cartList"></div>
-    <div class="footer">
-      <div class="badge">Total: <span id="totalAmount">0</span></div>
-      <div class="badge">Item: <span id="totalItem">0</span></div>
+  <!-- TAB CONTENT -->
+  <div id="menuTab" class="tabContent">
+    <div class="card">
+      <div class="small">MENU UTAMA</div>
+      <div class="row" id="mainMenu"></div>
+    </div>
+    <div class="card">
+      <div class="small">TAMBAHAN</div>
+      <div class="row" id="additionalMenu"></div>
     </div>
   </div>
 
-  <!-- PAYMENT -->
-  <div class="card">
-    <div class="small">METODE PEMBAYARAN</div>
-    <div class="row">
-      <button class="btn" onclick="setPayment('cash')">CASH</button>
-      <button class="btn" onclick="setPayment('qris')">QRIS</button>
+  <div id="cartTab" class="tabContent hide">
+    <div class="card">
+      <div class="small">PESANAN</div>
+      <div id="cartList"></div>
+      <div class="footer">
+        <div class="badge">Total: <span id="totalAmount">0</span></div>
+        <div class="badge">Item: <span id="totalItem">0</span></div>
+      </div>
     </div>
 
-    <input id="payInput" class="input" type="number" placeholder="UANG BAYAR" oninput="updateChange()">
+    <div class="card">
+      <div class="small">METODE PEMBAYARAN</div>
+      <div class="row">
+        <button class="btn" onclick="setPayment('cash')">CASH</button>
+        <button class="btn" onclick="setPayment('qris')">QRIS</button>
+      </div>
 
-    <div class="row">
-      <button class="btn btn-secondary" onclick="setQuickPay(5000)">5.000</button>
-      <button class="btn btn-secondary" onclick="setQuickPay(10000)">10.000</button>
-      <button class="btn btn-secondary" onclick="setQuickPay(20000)">20.000</button>
-      <button class="btn btn-secondary" onclick="setQuickPay(50000)">50.000</button>
-      <button class="btn btn-secondary" onclick="setQuickPay(100000)">100.000</button>
-      <button class="btn btn-warning" onclick="setQuickPay(total)">UANG PAS</button>
-    </div>
+      <input id="payInput" class="input" type="number" placeholder="UANG BAYAR" oninput="updateChange()">
 
-    <div class="footer">
-      <div class="badge">Kembalian: <span id="change">0</span></div>
-      <div class="badge">Metode: <span id="paymentMethodText">-</span></div>
-    </div>
+      <div class="row">
+        <button class="btn btn-secondary" onclick="setQuickPay(5000)">5.000</button>
+        <button class="btn btn-secondary" onclick="setQuickPay(10000)">10.000</button>
+        <button class="btn btn-secondary" onclick="setQuickPay(20000)">20.000</button>
+        <button class="btn btn-secondary" onclick="setQuickPay(50000)">50.000</button>
+        <button class="btn btn-secondary" onclick="setQuickPay(100000)">100.000</button>
+        <button class="btn btn-warning" onclick="setQuickPay(total)">UANG PAS</button>
+      </div>
 
-    <div class="row" style="margin-top:10px;">
-      <button class="btn btn-success" onclick="completeTransaction()">SELESAIKAN TRANSAKSI</button>
-      <button class="btn btn-danger" onclick="resetTransaction()">RESET TRANSAKSI</button>
+      <div class="footer">
+        <div class="badge">Kembalian: <span id="change">0</span></div>
+        <div class="badge">Metode: <span id="paymentMethodText">-</span></div>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="btn btn-success" onclick="completeTransaction()">SELESAIKAN TRANSAKSI</button>
+        <button class="btn btn-danger" onclick="resetTransaction()">RESET TRANSAKSI</button>
+      </div>
     </div>
   </div>
 
-  <!-- HISTORY -->
-  <div class="card">
-    <div class="small">RIWAYAT TRANSAKSI</div>
-    <div id="historyList"></div>
-    <div class="row" style="margin-top:10px;">
-      <button class="btn btn-success" onclick="saveHistory()">SIMPAN RIWAYAT</button>
-      <button class="btn btn-danger" onclick="resetHistory()">RESET RIWAYAT</button>
-      <button class="btn btn-secondary" onclick="closeCashier()">TUTUP KASIR</button>
+  <div id="historyTab" class="tabContent hide">
+    <div class="card">
+      <div class="small">RIWAYAT TRANSAKSI</div>
+      <div id="historyList"></div>
+      <div class="row" style="margin-top:10px;">
+        <button class="btn btn-success" onclick="saveHistory()">SIMPAN RIWAYAT</button>
+        <button class="btn btn-danger" onclick="resetHistory()">RESET RIWAYAT</button>
+      </div>
     </div>
   </div>
 
@@ -221,7 +240,31 @@
 </div>
 
 <script>
-  // DATA MENU (MENU UTAMA = NASI KUNING)
+  // TAB CONTROL
+  function showTab(tab){
+    document.getElementById("menuTab").classList.add("hide");
+    document.getElementById("cartTab").classList.add("hide");
+    document.getElementById("historyTab").classList.add("hide");
+
+    document.getElementById("tabMenu").classList.remove("active");
+    document.getElementById("tabCart").classList.remove("active");
+    document.getElementById("tabHistory").classList.remove("active");
+
+    if(tab==="menu"){
+      document.getElementById("menuTab").classList.remove("hide");
+      document.getElementById("tabMenu").classList.add("active");
+    }
+    if(tab==="cart"){
+      document.getElementById("cartTab").classList.remove("hide");
+      document.getElementById("tabCart").classList.add("active");
+    }
+    if(tab==="history"){
+      document.getElementById("historyTab").classList.remove("hide");
+      document.getElementById("tabHistory").classList.add("active");
+    }
+  }
+
+  // DATA MENU
   const mainMenuData = [
     {name:"NASI KUNING AYAM", price:15000},
     {name:"NASI KUNING IKAN", price:13000},
@@ -243,14 +286,12 @@
   let paymentMethod = "";
   let total = 0;
 
-  // LOAD HISTORY FROM STORAGE
   function loadData(){
     const savedHistory = localStorage.getItem("nasi51_history");
     if(savedHistory) history = JSON.parse(savedHistory);
     renderHistory();
   }
 
-  // RENDER MENU
   function renderMenu(){
     const mainMenu = document.getElementById("mainMenu");
     const addMenu = document.getElementById("additionalMenu");
@@ -274,7 +315,6 @@
     });
   }
 
-  // ADD TO CART
   function addToCart(item){
     const exist = cart.find(x=>x.name===item.name);
     if(exist){
@@ -345,7 +385,6 @@
     document.getElementById("change").innerText = formatRupiah(change < 0 ? 0 : change);
   }
 
-  // TRANSACTION
   function completeTransaction(isQrisConfirmed=false){
     if(cart.length===0){
       alert("Belum ada pesanan!");
@@ -389,6 +428,7 @@
 
     resetTransaction(false);
     renderHistory();
+    showTab("history");
   }
 
   function resetTransaction(showAlert=true){
@@ -401,7 +441,6 @@
     if(showAlert) alert("Transaksi direset.");
   }
 
-  // HISTORY
   function renderHistory(){
     const list = document.getElementById("historyList");
     list.innerHTML="";
@@ -423,7 +462,7 @@
     const blob = new Blob([data], {type:"application/json"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `bucek_riwayat_${new Date().getTime()}.json`;
+    a.download = `riwayat_${new Date().getTime()}.json`;
     a.click();
     URL.revokeObjectURL(a.href);
     alert("Riwayat tersimpan.");
@@ -435,16 +474,6 @@
       localStorage.removeItem("nasi51_history");
       renderHistory();
       alert("Riwayat berhasil direset.");
-    }
-  }
-
-  function closeCashier(){
-    if(confirm("Tutup kasir? (Riwayat akan tersimpan otomatis)")){
-      saveHistory();
-      history=[];
-      localStorage.removeItem("nasi51_history");
-      renderHistory();
-      alert("Kasir ditutup.");
     }
   }
 
@@ -464,7 +493,6 @@
     alert("QRIS gagal. Transaksi dibatalkan.");
   }
 
-  // UTIL
   function formatRupiah(num){
     return new Intl.NumberFormat("id-ID").format(num);
   }
