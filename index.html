@@ -2,181 +2,125 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Kasir Android Offline</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>Kasir Nasi Kuning 51</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body { background:#f2f4f7; font-family:Arial; padding:15px }
-h1 { text-align:center }
-
-.app {
-    max-width:1100px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-.card {
-    background:#fff;
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f8;
+    margin:0;
     padding:15px;
-    border-radius:10px;
-    box-shadow:0 3px 8px rgba(0,0,0,.05);
 }
-.menu {
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-    gap:10px;
+.container{
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,.1);
 }
-.menu button {
-    background:#1e90ff;
-    color:#fff;
-    border:none;
-    padding:10px;
-    border-radius:8px;
-    cursor:pointer;
+.header{
+    text-align:center;
+    margin-bottom:15px;
 }
-.menu span { font-size:12px; display:block }
-
-input {
-    width:100%;
-    padding:8px;
-    margin:5px 0;
+.header h1{
+    margin:0;
 }
-table {
-    width:100%;
-    border-collapse:collapse;
-}
-th,td {
-    border-bottom:1px solid #eee;
-    padding:6px;
-    font-size:14px;
-}
-.total {
-    font-size:20px;
-    font-weight:bold;
-    margin:10px 0;
-}
-
-.pay-method {
+.row{
     display:flex;
     gap:10px;
-    margin:10px 0;
+    margin-bottom:10px;
+    flex-wrap:wrap;
 }
-.pay-method button {
-    flex:1;
+select,input,button{
     padding:10px;
-    border:none;
-    border-radius:8px;
+    font-size:14px;
+}
+button{
     cursor:pointer;
-    font-size:16px;
-}
-.cash { background:#2ecc71; color:#fff }
-.qris { background:#f1c40f }
-
-.action {
-    background:#3498db;
-    color:#fff;
     border:none;
-    padding:10px;
-    width:100%;
-    border-radius:8px;
-    margin-top:5px;
+    border-radius:6px;
 }
-.reset {
-    background:#e74c3c;
-    color:#fff;
-    border:none;
-    padding:10px;
+.add{background:#0d6efd;color:#fff}
+.cash{background:#198754;color:#fff}
+.qris{background:#6f42c1;color:#fff}
+.save{background:#fd7e14;color:#fff;width:100%}
+table{
     width:100%;
-    border-radius:8px;
-    margin-top:5px;
-}
-
-.history {
-    max-height:320px;
-    overflow:auto;
-}
-
-.save-history {
-    background:#2c3e50;
-    color:#fff;
-    border:none;
-    padding:10px;
-    width:100%;
-    border-radius:8px;
+    border-collapse:collapse;
     margin-top:10px;
-    cursor:pointer;
 }
-
-@media(max-width:768px){
-    .app { grid-template-columns:1fr }
+th,td{
+    border:1px solid #ddd;
+    padding:8px;
+    text-align:center;
+}
+th{
+    background:#f1f1f1;
+}
+.total{
+    font-size:18px;
+    font-weight:bold;
+    text-align:right;
 }
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<h1>Nasi Kuning 51</h1>
-
-<div class="app">
-
-<!-- MENU -->
-<div class="card">
-<h3>Menu</h3>
-<div class="menu">
-<button onclick="addItem('Ikan',5000)">Ikan<span>5.000</span></button>
-<button onclick="addItem('Bakwan',2000)">Bakwan<span>2.000</span></button>
-<button onclick="addItem('Nasi',5000)">Nasi<span>5.000</span></button>
-<button onclick="addItem('Ayam',5000)">Ayam<span>5.000</span></button>
-<button onclick="addItem('Nasi Kuning Ayam',15000)">NK Ayam<span>15.000</span></button>
-<button onclick="addItem('Nasi Kuning Ikan',13000)">NK Ikan<span>13.000</span></button>
-<button onclick="addItem('Nasi Kuning Telur',10000)">NK Telur<span>10.000</span></button>
-<button onclick="addItem('NK Ayam Telur',23000)">NK Ayam Telur<span>23.000</span></button>
-<button onclick="addItem('NK Ikan Telur',20000)">NK Ikan Telur<span>20.000</span></button>
-<button onclick="addItem('Air Mineral',5000)">Air<span>5.000</span></button>
+<div class="header">
+    <h1>🍚 Nasi Kuning 51</h1>
+    <small>Aplikasi Kasir Manual</small>
 </div>
 
-<hr>
-<h3>Input Manual</h3>
-<input id="mNama" placeholder="Nama Menu">
-<input id="mHarga" type="number" placeholder="Harga">
-<input id="mQty" type="number" value="1">
-<button class="action" onclick="addManual()">Tambah Manual</button>
+<!-- INPUT MENU -->
+<div class="row">
+<select id="menu">
+<option value="" disabled selected>Pilih Menu</option>
+<option value="Ikan|5000">Ikan - 5000</option>
+<option value="Bakwan|2000">Bakwan - 2000</option>
+<option value="Nasi|5000">Nasi - 5000</option>
+<option value="Ayam|5000">Ayam - 5000</option>
+<option value="Nasi Kuning Ayam|15000">Nasi Kuning Ayam - 15000</option>
+<option value="Nasi Kuning Ikan|13000">Nasi Kuning Ikan - 13000</option>
+<option value="Nasi Kuning Telur|10000">Nasi Kuning Telur - 10000</option>
+<option value="Nasi Kuning Ayam Telur|23000">Nasi Kuning Ayam Telur - 23000</option>
+<option value="Nasi Kuning Ikan Telur|20000">Nasi Kuning Ikan Telur - 20000</option>
+<option value="Air Mineral|5000">Air Mineral - 5000</option>
+</select>
+
+<input type="number" id="qty" placeholder="Qty" value="1" min="1">
+<button class="add" onclick="tambah()">Tambah</button>
 </div>
 
-<!-- TRANSAKSI -->
-<div class="card">
-<h3>Transaksi</h3>
+<!-- CART -->
 <table>
 <thead>
-<tr><th>Menu</th><th>Qty</th><th>Subtotal</th></tr>
+<tr>
+<th>Menu</th>
+<th>Qty</th>
+<th>Subtotal</th>
+</tr>
 </thead>
 <tbody id="cart"></tbody>
 </table>
 
-<div class="total">Total: Rp <span id="total">0</span></div>
+<p class="total">Total: Rp <span id="total">0</span></p>
 
-<div class="pay-method">
-<button class="cash" onclick="setPayment('CASH')">CASH</button>
-<button class="qris" onclick="setPayment('QRIS')">QRIS</button>
+<!-- PEMBAYARAN -->
+<div class="row">
+<button class="cash" onclick="setMetode('CASH')">CASH</button>
+<button class="qris" onclick="setMetode('QRIS')">QRIS</button>
+<input type="number" id="bayar" placeholder="Uang Bayar">
 </div>
 
-<div id="cashInput">
-<label>Bayar (Cash)</label>
-<input type="number" id="bayar" oninput="hitungKembalian()">
-</div>
+<p>Metode: <b id="metode">-</b></p>
 
-<div class="total">Kembalian: Rp <span id="kembalian">0</span></div>
-
-<button class="action" onclick="selesaikan()">Selesaikan</button>
-<button class="reset" onclick="resetKasir()">Reset</button>
-</div>
-
-</div>
+<button class="save" onclick="simpanTransaksi()">💾 Save Histori Pembayaran</button>
 
 <!-- HISTORI -->
-<div class="card history">
-<h3>Histori Pembayaran</h3>
+<h3>📜 Histori Transaksi</h3>
 <table>
 <thead>
 <tr>
@@ -185,101 +129,93 @@ th,td {
 <th>Metode</th>
 <th>Total</th>
 <th>Bayar</th>
-<th>Kembali</th>
+<th>Kembalian</th>
 </tr>
 </thead>
 <tbody id="histori"></tbody>
 </table>
 
-<button class="save-history" onclick="saveHistori()">
-💾 Save Histori Pembayaran
-</button>
 </div>
 
 <script>
 let total = 0;
-let metode = "CASH";
+let metode = "";
 
-function addItem(n,h){ tambah(n,1,h); }
+function tambah(){
+    const menu = document.getElementById("menu").value;
+    if(!menu) return;
 
-function addManual(){
-    if(!mNama.value || !mHarga.value || !mQty.value) return;
-    tambah(mNama.value,+mQty.value,+mHarga.value);
-    mNama.value=mHarga.value=""; mQty.value=1;
+    const [nama,harga] = menu.split("|");
+    const qty = +document.getElementById("qty").value;
+    const subtotal = harga * qty;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${nama}</td><td>${qty}</td><td>${subtotal}</td>`;
+    document.getElementById("cart").appendChild(tr);
+
+    total += subtotal;
+    document.getElementById("total").innerText = total;
 }
 
-function tambah(nama, qty, harga){
-    const sub = qty * harga;
-    cart.insertRow().innerHTML =
-    `<td>${nama}</td><td>${qty}</td><td>${sub}</td>`;
-    total += sub;
-    updateTotal();
-}
-
-function updateTotal(){
-    document.getElementById("total").innerText = total.toLocaleString();
-    hitungKembalian();
-}
-
-function setPayment(m){
+function setMetode(m){
     metode = m;
-    cashInput.style.display = m==="QRIS" ? "none":"block";
-    kembalian.innerText = "0";
+    document.getElementById("metode").innerText = m;
+    if(m==="QRIS"){
+        document.getElementById("bayar").value = total;
+        document.getElementById("bayar").disabled = true;
+    }else{
+        document.getElementById("bayar").disabled = false;
+        document.getElementById("bayar").value = "";
+    }
 }
 
-function hitungKembalian(){
-    if(metode==="QRIS") return;
-    const b = +bayar.value||0;
-    kembalian.innerText = b>=total?(b-total).toLocaleString():0;
-}
-
-function selesaikan(){
+function simpanTransaksi(){
     if(total===0) return alert("Belum ada transaksi");
-    let bayarVal = metode==="QRIS"?total:+bayar.value;
-    if(metode==="CASH" && bayarVal<total) return alert("Uang kurang");
+    if(!metode) return alert("Pilih metode pembayaran");
 
+    const bayar = +document.getElementById("bayar").value;
+    if(metode==="CASH" && bayar < total) return alert("Uang kurang");
+
+    const kembali = bayar - total;
     const now = new Date();
     const tgl = now.toLocaleDateString("id-ID");
     const jam = now.toLocaleTimeString("id-ID");
-    const kembali = bayarVal - total;
 
-    histori.insertRow().innerHTML = `
+    // tampil histori
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
         <td>${tgl}</td>
         <td>${jam}</td>
         <td>${metode}</td>
-        <td>${total.toLocaleString()}</td>
-        <td>${bayarVal.toLocaleString()}</td>
-        <td>${kembali.toLocaleString()}</td>
-    `;
+        <td>${total}</td>
+        <td>${bayar}</td>
+        <td>${kembali}</td>`;
+    document.getElementById("histori").appendChild(tr);
 
-    resetKasir();
-}
+    // simpan ke file CSV
+    const fileName = `kasir-nasi-kuning-51-${now.toISOString().slice(0,10)}.csv`;
+    let csv = localStorage.getItem(fileName) || 
+    "Tanggal,Waktu,Metode,Total,Bayar,Kembalian\n";
 
-function saveHistori(){
-    if(histori.rows.length===0) return alert("Histori kosong");
+    csv += `${tgl},${jam},${metode},${total},${bayar},${kembali}\n`;
+    localStorage.setItem(fileName,csv);
 
-    let csv = "Tanggal,Waktu,Metode,Total,Bayar,Kembalian\n";
-    [...histori.rows].forEach(r=>{
-        csv += [...r.cells].map(c=>c.innerText).join(",") + "\n";
-    });
-
-    const now = new Date();
-    const file = `histori-pembayaran-${now.toISOString().slice(0,10)}.csv`;
     const blob = new Blob([csv],{type:"text/csv"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = file;
+    a.download = fileName;
     a.click();
+
+    reset();
 }
 
-function resetKasir(){
-    cart.innerHTML="";
+function reset(){
+    document.getElementById("cart").innerHTML="";
+    document.getElementById("total").innerText="0";
+    document.getElementById("bayar").value="";
+    document.getElementById("metode").innerText="-";
     total=0;
-    bayar.value="";
-    metode="CASH";
-    cashInput.style.display="block";
-    updateTotal();
-    kembalian.innerText="0";
+    metode="";
 }
 </script>
 
