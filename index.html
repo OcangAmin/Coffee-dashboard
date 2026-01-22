@@ -1,177 +1,136 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard Manajemen Coffee Shop</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-body{background:#f5f7fa;font-family:Inter,Segoe UI,sans-serif}
-h1,h2,h3{font-weight:700}
-.card{border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);margin-bottom:18px}
-.card-header{background:#fff;font-weight:600}
-.table th,.table td{font-size:12px;vertical-align:middle}
-.money{text-align:right;font-weight:600}
-.badge{font-size:11px}
-input[type=number]{max-width:110px}
-.ai-box{background:#f0f4ff;border-left:4px solid #4f6cff;padding:10px;font-size:12px;border-radius:8px}
-.small{font-size:11px;color:#666}
-</style>
+    <meta charset="UTF-8">
+    <title>Kasir Manual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .menu button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        .total {
+            font-size: 18px;
+            margin-top: 15px;
+        }
+        input {
+            padding: 8px;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .reset {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container-fluid p-4">
-<h1>☕ Dashboard Manajemen Coffee Shop</h1>
-<p class="small">Seluruh data tersinkron otomatis: bahan baku → resep → HPP → margin → insight</p>
+<div class="container">
+    <h1>Aplikasi Kasir Manual</h1>
 
-<!-- ===================== DATABASE BAHAN BAKU ===================== -->
-<div class="card">
-<div class="card-header">Database Bahan Baku (Editable)</div>
-<div class="card-body table-responsive">
-<table class="table table-bordered" id="bahanTable">
-<thead>
-<tr>
-<th>Bahan</th>
-<th>Kategori</th>
-<th>Satuan</th>
-<th>Harga Unit (Rp)</th>
-<th>Referensi Marketplace</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
-</div>
+    <div class="menu">
+        <button onclick="addItem('Ikan', 5000)">Ikan - Rp 5.000</button>
+        <button onclick="addItem('Bakwan', 2000)">Bakwan - Rp 2.000</button>
+        <button onclick="addItem('Nasi', 5000)">Nasi - Rp 5.000</button>
+        <button onclick="addItem('Ayam', 5000)">Ayam - Rp 5.000</button>
+        <button onclick="addItem('Nasi Kuning Ayam', 15000)">Nasi Kuning Ayam - Rp 15.000</button>
+        <button onclick="addItem('Nasi Kuning Ikan', 13000)">Nasi Kuning Ikan - Rp 13.000</button>
+        <button onclick="addItem('Nasi Kuning Telur', 10000)">Nasi Kuning Telur - Rp 10.000</button>
+        <button onclick="addItem('Nasi Kuning Ayam Telur', 23000)">Nasi Kuning Ayam Telur - Rp 23.000</button>
+        <button onclick="addItem('Nasi Kuning Ikan Telur', 20000)">Nasi Kuning Ikan Telur - Rp 20.000</button>
+        <button onclick="addItem('Air Mineral', 5000)">Air Mineral - Rp 5.000</button>
+    </div>
 
-<!-- ===================== DATABASE MENU ===================== -->
-<div class="card">
-<div class="card-header">Database Menu & Resep (Auto HPP)</div>
-<div class="card-body table-responsive">
-<table class="table table-striped" id="menuTable">
-<thead>
-<tr>
-<th>Menu</th>
-<th>Kategori</th>
-<th>Komposisi</th>
-<th>HPP (Rp)</th>
-<th>Harga Jual</th>
-<th>Margin %</th>
-<th>Rekomendasi Harga (50–70%)</th>
-<th>AI Insight</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
-</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Menu</th>
+                <th>Harga</th>
+            </tr>
+        </thead>
+        <tbody id="cart"></tbody>
+    </table>
 
+    <div class="total">
+        Total: Rp <span id="total">0</span>
+    </div>
+
+    <div>
+        <label>Uang Bayar</label>
+        <input type="number" id="bayar" oninput="hitungKembalian()">
+    </div>
+
+    <div class="total">
+        Kembalian: Rp <span id="kembalian">0</span>
+    </div>
+
+    <button class="reset" onclick="resetKasir()">Reset Transaksi</button>
 </div>
 
 <script>
-// =========================
-// DATABASE BAHAN BAKU
-// =========================
-const bahan = {
-  espresso_kaks:{nama:"Espresso Toraja",harga:230000/1000*18/60,kategori:"Kopi",satuan:"ml",link:"https://tokopedia.com/search?q=kopi+toraja"},
-  espresso_diks:{nama:"Espresso Sumatra",harga:280000/1000*18/60,kategori:"Kopi",satuan:"ml",link:"https://shopee.co.id/search?keyword=kopi+sumatra"},
-  uht:{nama:"Susu UHT Diamond",harga:18000/1000,kategori:"Dairy",satuan:"ml",link:"https://tokopedia.com/search?q=susu+uht+diamond"},
-  skm:{nama:"SKM",harga:14000/490,kategori:"Dairy",satuan:"ml",link:"https://shopee.co.id/search?keyword=susu+kental+manis"},
-  evaporasi:{nama:"Susu Evaporasi",harga:21500/380,kategori:"Dairy",satuan:"ml",link:"https://tokopedia.com/search?q=susu+evaporasi"},
-  creamer:{nama:"MaxCreamer",harga:45000/1000,kategori:"Dairy",satuan:"gr",link:"https://shopee.co.id/search?keyword=maxcreamer"},
-  gula_aren:{nama:"Gula Aren Dainchi",harga:28000/1000,kategori:"Lain",satuan:"gr",link:"https://tokopedia.com/search?q=gula+aren+dainchi"},
-  syrup:{harga:180000/1000},
-  cheese:{nama:"Cheese Cream",harga:60000/1000,kategori:"Dairy",satuan:"ml",link:"https://shopee.co.id/search?keyword=cheese+cream"},
-  cup:{nama:"Paper Cup",harga:900,kategori:"Operasional",satuan:"pcs",link:"https://tokopedia.com/search?q=paper+cup"},
-  es:{nama:"Es Batu",harga:70000/8000*100,kategori:"Operasional",satuan:"100gr",link:"-"}
-};
+    let total = 0;
 
-// =========================
-// DATABASE MENU & RESEP
-// =========================
-const menu = [
-{
-nama:"Kopi Susu",
-kategori:"Coffee Based",
-hargaJual:25000,
-resep:[
-["skm",20],["creamer",15],["evaporasi",10],["espresso_kaks",30],["uht",70],["es",1],["cup",1]
-]
-},
-{
-nama:"Tuan Rumah",
-kategori:"Coffee Based",
-hargaJual:26000,
-resep:[
-["gula_aren",25],["creamer",25],["espresso_kaks",30],["uht",100],["es",1],["cup",1]
-]
-},
-{
-nama:"Tiramisu",
-kategori:"Coffee Based",
-hargaJual:28000,
-resep:[
-["syrup",20],["skm",10],["creamer",15],["espresso_kaks",30],["uht",100],["cheese",20],["es",1],["cup",1]
-]
-}
-];
+    function addItem(nama, harga) {
+        const cart = document.getElementById("cart");
+        const row = cart.insertRow();
+        row.insertCell(0).innerText = nama;
+        row.insertCell(1).innerText = harga.toLocaleString("id-ID");
 
-// =========================
-// RENDER BAHAN
-// =========================
-const bahanBody=document.querySelector("#bahanTable tbody");
-Object.values(bahan).forEach(b=>{
-if(!b.nama)return;
-bahanBody.innerHTML+=`
-<tr>
-<td>${b.nama}</td>
-<td>${b.kategori}</td>
-<td>${b.satuan}</td>
-<td class="money"><input type="number" value="${b.harga.toFixed(2)}" class="form-control form-control-sm"></td>
-<td><a href="${b.link}" target="_blank">Marketplace</a></td>
-</tr>`;
-});
+        total += harga;
+        document.getElementById("total").innerText = total.toLocaleString("id-ID");
+        hitungKembalian();
+    }
 
-// =========================
-// HITUNG HPP MENU
-// =========================
-function hitungHPP(resep){
-let total=0;
-resep.forEach(r=>{
-let b=bahan[r[0]];
-total+=b.harga*r[1];
-});
-return total;
-}
+    function hitungKembalian() {
+        const bayar = document.getElementById("bayar").value || 0;
+        const kembalian = bayar - total;
+        document.getElementById("kembalian").innerText =
+            kembalian >= 0 ? kembalian.toLocaleString("id-ID") : 0;
+    }
 
-// =========================
-// RENDER MENU
-// =========================
-const menuBody=document.querySelector("#menuTable tbody");
-menu.forEach(m=>{
-let hpp=hitungHPP(m.resep);
-let margin=((m.hargaJual-hpp)/m.hargaJual*100);
-menuBody.innerHTML+=`
-<tr>
-<td><b>${m.nama}</b></td>
-<td>${m.kategori}</td>
-<td>${m.resep.map(r=>`${r[1]} ${bahan[r[0]].satuan} ${bahan[r[0]].nama}`).join("<br>")}</td>
-<td class="money">${hpp.toFixed(0)}</td>
-<td class="money">${m.hargaJual}</td>
-<td>${margin.toFixed(1)}%</td>
-<td class="money">
-50%: ${(hpp*1.5).toFixed(0)}<br>
-60%: ${(hpp*1.6).toFixed(0)}<br>
-70%: ${(hpp*1.7).toFixed(0)}
-</td>
-<td>
-<div class="ai-box">
-HPP relatif ${margin<50?"tinggi":"sehat"}.
-Menu ini memiliki kontribusi bahan utama ${m.kategori.includes("Coffee")?"kopi":"dairy"}.
-Margin ${margin.toFixed(1)}% ${margin<60?"perlu optimasi harga":"aman untuk scaling"}.
-</div>
-</td>
-</tr>`;
-});
+    function resetKasir() {
+        document.getElementById("cart").innerHTML = "";
+        total = 0;
+        document.getElementById("total").innerText = "0";
+        document.getElementById("bayar").value = "";
+        document.getElementById("kembalian").innerText = "0";
+    }
 </script>
 
 </body>
